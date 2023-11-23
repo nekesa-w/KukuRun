@@ -1,25 +1,40 @@
-var chicken = document.getElementById('chicken');
-var obstacle = document.getElementById('obstacle');
-var counter = 0;
+let board;
+let boardWidth = 1000;
+let boardHeight = 400;
+let context;
 
-function jump(){
-if(chicken.classList != 'animate'){
-    chicken.classList.add('animate');
+let chickenWidth = 100;
+let chickenHeight = 100;
+let chickenX = 50;
+let chickenY = boardHeight - chickenHeight;
+let chickenImg;
+
+let groundImg;
+
+let chicken = {
+    x : chickenX,
+    y : chickenY,
+    width : chickenWidth,
+    height : chickenHeight
 }
-setTimeout(function(){
-    chicken.classList.remove('animate');
-    counter++;
-    },500);
-}
 
-var lose = setInterval(function(){
-    var chickenTop = parseInt(window.getComputedStyle(chicken).getPropertyValue('top'));
-    var blockLeft = parseInt(window.getComputedStyle(obstacle).getPropertyValue('left'));
+window.onload = function(){
+    board = document.getElementById("board");
+    board.height = boardHeight;
+    board.width = boardWidth;
 
-    if (blockLeft < 20 && blockLeft > 0 && chickenTop >= 130) {
-        obstacle.style.animation = "none";
-        obstacle.style.display = "none";
-        alert("SCORE: " + counter);  // Concatenate "SCORE:" with the counter
-        counter = 0;
+    context = board.getContext('2d')
+
+    chickenImg = new Image();
+    chickenImg.src = "images/chicken.png";
+    chickenImg.onload = function() {
+        context.drawImage(chickenImg, chicken.x, chicken.y, chicken.width, chicken.height);
     }
-},10);
+
+    groundImg = new Image();
+    groundImg.src = "images/ground.png";
+    groundImg.onload = function() {
+        groundImg.drawImage(groundImg, chicken.x, chicken.y, chicken.width, chicken.height);
+    }
+   
+}

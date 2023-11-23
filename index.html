@@ -1,29 +1,42 @@
 <!DOCTYPE html>
 <html lang="en" onclick="jump()">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Audiowide">
     <link rel="stylesheet" href="style.css">
-    <title>Running Game</title>
+    <title>Kuku Run</title>
 </head>
+
 <body>
-    <div id="game">
-        <img style="position: absolute; opacity: .6;" 
-        src="images/" alt="" width="350px" height="250px">
-        <!-- Uncomment the next line if you want the sky.png to be visible -->
-        <img style="position: absolute; opacity: .6; left: 350px;" 
-        src="images/" alt="" width="350px" height="250px"> 
-        <div id="chicken">
-            <!-- Uncomment the next line if you want the chicken image to be visible -->
-            <img src="images/" alt="" width="60px" height="60px"> 
-        </div>
-        <div id="obstacle">
-            <img src="images/" alt="" width="50px" height="50px"> 
-        </div>
+    <div class="title">
+        <h1>Kuku Run</h1>
     </div>
-    <div id="ground">
-        <img src="images/" alt="" width="700px" height="50px">
+
+    <div class="game">
+
+        <div class="sky">
+            <div class="sky-img">
+            </div>
+        </div>
+
+        <div class="ground">
+            <div class="ground-img">
+            </div>
+        </div>
+
+        <div class="chicken">
+            <img src="images/chicken.png" alt="chicken">
+        </div>
+
+        <div class="obstacle">
+            <img src="images/obstacle.png" alt="obstacle">
+        </div>
+
     </div>
 </body>
-<script src="endlessrunner.js"></script>
+
+<script src="app.js"></script>
+
 </html>
