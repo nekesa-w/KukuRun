@@ -57,4 +57,3 @@ function moveFallingObstacle() {
 setInterval(moveFallingObstacle, 10);
 
 
-

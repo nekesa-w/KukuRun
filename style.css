@@ -1,56 +1,104 @@
 body {
-    margin:0;
-    padding:0;
-    background:#111;
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    font-family: "Audiowide", sans-serif;
+    width: 100%;
+    height: 100%;
+    text-align: center;
 }
 
-#game{
-    width:700px;
-    height:250px;
-    background:navy;
-    position:absolute;
-    top:50px;
+.title {
+    margin: 0;
+    padding: 0;
+    margin-top: 10px;
+    font-size: 20px;
+    color: rgb(184, 63, 11);
 }
 
-#chicken {
-    width:60px;
-    height:60px;
-    background:red;
-    position:relative;
-    top:190px;
-    left:100px;
+.game {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    height: 70%;
+    position: absolute;
+    background-color: #111;
 }
 
-.animate{
+.sky {
+    width: 100%;
+    height: 80%;
+    background-color: rgb(85, 151, 157);
+    position: relative;
+}
+
+.sky-img {
+    height: 100%;
+    background-image: url("images/sky.png");
+    background-repeat: repeat-x;
+    background-size: contain;
+}
+
+.ground {
+    width: 100%;
+    height: 20%;
+    background-color: brown;
+    position: relative;
+}
+
+.ground-img {
+    height: 100%;
+    background-image: url("images/ground.png");
+    background-repeat: repeat-x;
+    background-size: contain;
+}
+
+.chicken img {
+    height: 30%;
+    left: 15%;
+    bottom: 20%;
+    position: absolute;
+}
+
+.obstacle img {
+    height: 20%;
+    bottom: 20%;
+    position: absolute;
+    animation: block 4.0s infinite linear;
+}
+
+.animate {
     animation: jump .5s linear 0s;
 }
 
-@keyframes jump{
-    0%{top:150px;}
-    30%{top:100px;}
-    70%{top:100px;}
-    100%{top:150px;}
+@keyframes jump {
+    0% {
+        bottom: 20%;
+    }
+
+    30% {
+        bottom: 20%;
+    }
+
+    70% {
+        bottom: 20%;
+    }
+
+    100% {
+        bottom: 20%;
+    }
 }
 
-#obstacle{
-    width:50px;
-    height:50px;
-    background:green;
-    position:relative;
-    top:150px;
-    left:100%;
-    animation: block 1.3s infinite linear;
-}
+@keyframes block {
+    0% {
+        left: 95%;
+    }
 
-@keyframes block{
-    0%{left:680px;}
-    100%{left:-680px;}
-}
-
-#ground{
-    width:700px;
-    height:50px;
-    position:absolute;
-    top:300px;
-    background:brown;
+    100% {
+        left: 0%;
+    }
 }
