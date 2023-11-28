@@ -1,41 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" onclick="jump()">
-
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Audiowide">
-    <link rel="stylesheet" href="style.css">
-    <title>Kuku Run</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chrome Chicken Replica</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <div class="title">
-        <h1>Kuku Run</h1>
-    </div>
-
-    <div class="game">
-
-        <div class="sky">
-            <div class="sky-img">
-            </div>
-        </div>
-
-        <div class="ground">
-            <div class="ground-img">
-            </div>
-        </div>
-
-        <div class="chicken">
-            <img src="images/chicken.png" alt="chicken">
-        </div>
-
-        <div class="obstacle">
-            <img src="images/obstacle.png" alt="obstacle">
-        </div>
-    </div>
+  <div id="ground"></div>
+  <canvas id="game" width="640" height="400"></canvas>
+  <script src="app.js"></script>
 </body>
-<script src="app.js"></script>
-
 </html>
-
