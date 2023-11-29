@@ -1,11 +1,26 @@
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
+// Background Variables/Constants
+const sky = new Image();
+sky.src = 'images/parallax/sky.png';
+const tallground = new Image();
+tallground.src = 'images/parallax/tallground.png';
+const midground = new Image();
+midground.src = 'images/parallax/midground.png';
+const house = new Image();
+house.src = 'images/parallax/house.png';
+const shortground = new Image();
+shortground.src = 'images/parallax/shortground.png';
+const backgroundImage = new Image();
+backgroundImage.src = 'images/bg.png';
+
 // Variables
 let score;
 let scoreText;
 let highscore;
 let highscoreText;
+let gameTitle;
 let player;
 let gravity;
 let obstacles = [];
@@ -21,6 +36,39 @@ document.addEventListener('keydown', function (evt) {
 document.addEventListener('keyup', function (evt) {
   keys[evt.code] = false;
 });
+
+// Classes
+class Layer{
+  constructor(image, speedModifier){
+    this.x = 0;
+    this.y = 0;
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.x2 = this.width;
+    this.image = image;
+    this.speedModifier = speedModifier;
+    this.speed = gameSpeed * this.speedModifier;
+  }
+
+  update(){
+    this.speed = gameSpeed * this.speedModifier;
+    if(this.x <= -this.width){
+      this.x = this.width + this.x2 - this.speed;
+    }
+
+    if(this.x2 <= -this.width){
+      this.x2 = this.width + this.x - this.speed;
+    }
+
+    this.x = Math.floor(this.x - this.speed);
+    this.x2 = Math.floor(this.x2 - this.speed);
+  }
+
+  draw(){
+    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+    ctx.drawImage(this.image, this.x2, this.y, this.width, this.height);
+  }
+}
 
 class Player {
   constructor(x, y, w, h, c) {
@@ -62,7 +110,7 @@ class Player {
     }
 
     if (keys['ShiftLeft'] || keys['KeyS']) {
-      this.h = this.originalHeight /1.3;
+      this.h = this.originalHeight/1.3;
       this.currentImage = this.imageDuck;
     } else {
       this.h = this.originalHeight;
@@ -103,17 +151,16 @@ class Player {
   }
 }
 
-
 class Obstacle {
   constructor(x, y, w, h, type) {
     this.x = x;
     this.y = y;
     this.w = w;
     this.h = h;
-    this.type = type; // Keep track of the obstacle type
+    this.type = type;
 
     this.dx = -gameSpeed;
-    this.rotation = 0; // Initial rotation angle
+    this.rotation = 0;
 
     if (this.type === 0) {
       // Ground obstacle
@@ -122,7 +169,7 @@ class Obstacle {
     } else {
       // Floating obstacle (butcher knife)
       this.image = new Image();
-      this.image.src = 'images/butcher-knife.png'; // Replace 'butcher-knife.png' with your actual image filename
+      this.image.src = 'images/butcher-knife.png';
     }
   }
 
@@ -131,7 +178,7 @@ class Obstacle {
 
     // Rotate only floating obstacles
     if (this.type !== 0) {
-      this.rotation -= 0.1; // Adjust the rotation speed as needed
+      this.rotation -= 0.1;
     }
 
     this.Draw();
@@ -154,9 +201,6 @@ class Obstacle {
   }
 }
 
-
-
-
 class Text {
   constructor (t, x, y, a, c, s) {
     this.t = t;
@@ -170,9 +214,16 @@ class Text {
   Draw () {
     ctx.beginPath();
     ctx.fillStyle = this.c;
-    ctx.font = this.s + "px sans-serif";
+    ctx.font = this.s + 'px Audiowide';
+    ctx.shadowColor = '#964c05';
+    ctx.shadowOffsetX = -3;
+    ctx.shadowOffsetY = 3;
     ctx.textAlign = this.a;
     ctx.fillText(this.t, this.x, this.y);
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
     ctx.closePath();
   }
 }
@@ -184,10 +235,10 @@ function SpawnObstacle() {
 
   if (type === 0) {
     // Ground obstacle
-    size = RandomIntInRange(30, 80);
+    size = RandomIntInRange(40, 100);
   } else {
     // Floating obstacle
-    size = 40; // Set a fixed size for floating obstacles
+    size = 70;
   }
 
   let obstacle = new Obstacle(canvas.width + size, canvas.height - size, size, size, type);
@@ -199,48 +250,56 @@ function SpawnObstacle() {
   obstacles.push(obstacle);
 }
 
+// Random Integer
 function RandomIntInRange (min, max) {
   return Math.round(Math.random() * (max - min) + min);
 }
 
-function Start () {
-  
-  const ground = document.getElementById('ground');
-  groundImage = new Image(); // Initialize groundImage here
-  groundImage.src = 'images/ground.png';
+const skyLayer = new Layer(sky,0.1);
+const tallgroundLayer = new Layer(tallground,0.2);
+const midgroundLayer = new Layer(midground,0.3);
+const shortgroundLayer = new Layer(shortground,1);
+const gameObjects = [skyLayer, tallgroundLayer, midgroundLayer, shortgroundLayer];
 
+// Game Start
+function Start () {
+ 
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
-  ground.style.height = '20px'; // Set the ground div height
-  ground.style.backgroundImage = `url('${groundImage.src}')`;
-
-  ctx.font = '20px sans-serif';
+  ctx.font = 'Audiowide';
 
   gameSpeed = 3;
   gravity = 1;
 
   score = 0;
   highscore = 0;
+
   if (localStorage.getItem('highscore')) {
     highscore = localStorage.getItem('highscore');
   }
 
-  player = new Player(25, 0, 50, 50, '#FF5858');
-
-  scoreText = new Text("Score: " + score, 25, 25, "left", "#212121", "20");
-  highscoreText = new Text("Highscore: " + highscore, canvas.width - 25, 25, "right", "#212121", "20");
+  player = new Player(150, 0, 100, 100, '#FF5858');
+  scoreText = new Text("Score: " + score, canvas.width*0.05, 100, "left", "#d6a735", "40");
+  gameTitle = new Text("KUKU RUN", canvas.width / 2, 100, "center", "#fff", "60");
+  highscoreText = new Text("Highscore: " + highscore, canvas.width - canvas.width*0.05, 100, "right", "#d6a735", "40");
 
   requestAnimationFrame(Update);
 }
 
 let initialSpawnTimer = 200;
 let spawnTimer = initialSpawnTimer;
+
 function Update() {
   requestAnimationFrame(Update);
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   if (!gameOver) {
+    gameObjects.forEach(object=>{
+      object.update();
+      object.draw();
+    });
+
     spawnTimer--;
     if (spawnTimer <= 0) {
       SpawnObstacle();
@@ -280,6 +339,8 @@ function Update() {
     scoreText.t = "Score: " + score;
     scoreText.Draw();
 
+    gameTitle.Draw();
+
     if (score > highscore) {
       highscore = score;
       highscoreText.t = "Highscore: " + highscore;
@@ -289,19 +350,51 @@ function Update() {
 
     gameSpeed += 0.003;
   } else {
+    // Set background
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height);
+
+    var rectWidth = 500;
+    var rectHeight = 300;
+    var rectX = (canvas.width - rectWidth) / 2; // Center the rectangle horizontally
+    var rectY = (canvas.height - rectHeight) / 2; // Center the rectangle vertically
+
+    // Set rounded rectangle properties
+    var cornerRadius = 20; // Adjust the corner radius for rounding
+
+    // Draw rounded background rectangle behind the text
+    ctx.fillStyle = '#c0c4c9'; // Adjust the background color
+    ctx.beginPath();
+    ctx.moveTo(rectX + cornerRadius, rectY);
+    ctx.arcTo(rectX + rectWidth, rectY, rectX + rectWidth, rectY + rectHeight, cornerRadius);
+    ctx.arcTo(rectX + rectWidth, rectY + rectHeight, rectX, rectY + rectHeight, cornerRadius);
+    ctx.arcTo(rectX, rectY + rectHeight, rectX, rectY, cornerRadius);
+    ctx.arcTo(rectX, rectY, rectX + rectWidth, rectY, cornerRadius);
+    ctx.closePath();
+    ctx.fill();
+
     // Display game over message
-    ctx.fillStyle = '#212121';
-    ctx.font = '50px sans-serif';
+    ctx.fillStyle = '#c03831';
+    ctx.font = '60px Audiowide';
     ctx.textAlign = 'center';
+    ctx.shadowColor = '#822521';
+    ctx.shadowOffsetX = -3;
+    ctx.shadowOffsetY = 3;
     ctx.fillText('Game Over', canvas.width / 2, canvas.height / 2);
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
 
     // Display reload button
-    ctx.fillStyle = '#4CAF50';
+    ctx.fillStyle = '#34a234';
     ctx.fillRect(canvas.width / 2 - 100, canvas.height / 2 + 50, 200, 50);
     ctx.fillStyle = '#ffffff';
-    ctx.font = '20px sans-serif';
+    ctx.font = '40px Audiowide';
     ctx.textAlign = 'center';
-    ctx.fillText('Reload', canvas.width / 2, canvas.height / 2 + 85);
+    ctx.fillText('Restart', canvas.width / 2, canvas.height / 2 + 85);
 
     canvas.addEventListener('click', function () {
       // Reload the page when the button is clicked
@@ -322,6 +415,5 @@ function ResetGame() {
   // Call Start to initialize the game again
   Start();
 }
-
 
 Start();
