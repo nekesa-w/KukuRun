@@ -1,3 +1,22 @@
+//Sound Effects
+var sfx = {
+  Jump: new Howl({
+     src: [
+        'https://assets.codepen.io/21542/howler-push.mp3',
+     ]
+  }),
+
+}
+
+//Background Music
+var music = {
+  overworld: new Howl({
+     src: [
+        "https://assets.codepen.io/21542/howler-demo-bg-music.mp3"
+     ]
+  })
+}
+
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
@@ -90,7 +109,9 @@ class Player {
     if (this.grounded && this.jumpTimer === 0) {
       this.jumpTimer = 1;
       this.dy = -this.jumpForce;
-    } else if (this.jumpTimer > 0 && this.jumpTimer < 15) {
+    } 
+    else if (this.jumpTimer > 0 && this.jumpTimer < 15) {
+      sfx.Jump.play();
       this.jumpTimer++;
       this.dy = -this.jumpForce - (this.jumpTimer / 50);
     }
@@ -232,6 +253,17 @@ function Start () {
   highscoreText = new Text("Highscore: " + highscore, canvas.width - 25, 25, "right", "#212121", "20");
 
   requestAnimationFrame(Update);
+
+//Play Background Music when Start Music Button is pressed
+  document.querySelector(".play-music").addEventListener("click", () => {
+    if (!music.overworld.playing()) {
+       music.overworld.play();
+    }
+ })
+ document.querySelector(".stop-music").addEventListener("click", () => {
+     music.overworld.pause();
+ })
+ 
 }
 
 let initialSpawnTimer = 200;
