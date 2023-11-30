@@ -6,7 +6,7 @@ Kuku Run is an endless running game implemented in WebGL where players take on t
 - **Endless Running:** Experience an endless and dynamically generated game environment.
 - **Obstacle Avoidance:** Navigate the chicken through obstacles to evade capture.
 - **Score System:** Track your progress and achievements with a scoring system.
-- **Dynamic Pursuer:** The pursuing character adapts and intensifies the chase as the game progresses.
+
 
 ## Tools
 - **IDE:** Visual Studio code
