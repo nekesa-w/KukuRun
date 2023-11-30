@@ -8,7 +8,7 @@ var sfx = {
 
 }
 
-//Background Music
+//Background Music for game
 var music = {
   overworld: new Howl({
      src: [
@@ -89,6 +89,7 @@ class Layer{
   }
 }
 
+//adding the chicken model
 class Player {
   constructor(x, y, w, h, c) {
     this.x = x;
@@ -120,6 +121,7 @@ class Player {
     this.currentImage = this.imageStationary;
   }
 
+  //Animations
   Animate() {
     // Jump
     if (keys['Space'] || keys['KeyW']) {
@@ -172,6 +174,7 @@ class Player {
   }
 }
 
+//Obstacles Addition
 class Obstacle {
   constructor(x, y, w, h, type) {
     this.x = x;
